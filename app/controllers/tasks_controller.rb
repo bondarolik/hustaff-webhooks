@@ -3,8 +3,7 @@
 # Exposes API for interacting with Tasks.
 class TasksController < ApplicationController
   before_action :authenticate
-  before_action :find_project
-  before_action :find_task, only: %i[show update destroy]
+  include FindOrganizationAndProject
 
   def index
     render json: TaskSerializer.new(@project.tasks).serializable_hash
@@ -38,14 +37,6 @@ class TasksController < ApplicationController
   end
 
   private
-
-  def find_project
-    @project = Project.find(params[:project_id])
-  end
-
-  def find_task
-    @task = @project.tasks.find(params[:id])
-  end
 
   def task_params
     params.permit(:name, :description)

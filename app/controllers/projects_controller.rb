@@ -3,8 +3,7 @@
 # Exposes API for interacting with Projects.
 class ProjectsController < ApplicationController
   before_action :authenticate
-  before_action :find_organization
-  before_action :find_project, only: %i[show update destroy]
+  include FindOrganizationAndProject
 
   def index
     render json: ProjectSerializer.new(@organization.projects).serializable_hash
@@ -38,14 +37,6 @@ class ProjectsController < ApplicationController
   end
 
   private
-
-  def find_organization
-    @organization = Organization.find(params[:organization_id])
-  end
-
-  def find_project
-    @project = @organization.projects.find(params[:id])
-  end
 
   def project_params
     params.permit(:name)
