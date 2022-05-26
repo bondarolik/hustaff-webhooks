@@ -2,6 +2,7 @@
 
 # Exposes API for interacting with Tasks.
 class TasksController < ApplicationController
+  before_action :authenticate
   before_action :find_project
   before_action :find_task, only: %i[show update destroy]
 

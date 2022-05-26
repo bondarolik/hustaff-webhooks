@@ -2,6 +2,7 @@
 
 # Exposes API for interacting with Projects.
 class ProjectsController < ApplicationController
+  before_action :authenticate
   before_action :find_organization
   before_action :find_project, only: %i[show update destroy]
 
