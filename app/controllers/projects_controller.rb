@@ -10,12 +10,12 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = @organization.projects.build(project_params)
+    result = ProjectServices::Creator.call(@organization, project_params)
 
-    if @project.save
-      render json: ProjectSerializer.new(@project).serializable_hash
+    if result.success?
+      render json: ProjectSerializer.new(result.payload).serializable_hash
     else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: result.payload.errors.full_messages }, status: result.status
     end
   end
 
@@ -24,10 +24,12 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(project_params)
-      render json: ProjectSerializer.new(@project).serializable_hash
+    result = ProjectServices::Updater.call(@project, project_params)
+
+    if result.success?
+      render json: ProjectSerializer.new(result.payload).serializable_hash
     else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: result.payload.errors.full_messages }, status: result.status
     end
   end
 
@@ -39,6 +41,6 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.permit(:name)
+    params.permit(:name, :organization_id)
   end
 end
