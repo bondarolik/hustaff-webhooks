@@ -90,7 +90,7 @@ Make sure that your client is configured to accept **application/json**.
 
 ### Create new account
 
-```
+```yaml
 # POST: http://127.0.0.1:3000/create-account
 # Content-Type: application/json
 {
@@ -100,9 +100,9 @@ Make sure that your client is configured to accept **application/json**.
 
 # Response:
 # Use the token obtained in Authorization header
-HTTP/1.1 200 OK
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjozLCJhdXRoZW50aWNhdGVkX2J5IjpbImF1dG9sb2d...
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+# Authorization: eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjozLCJhdXRoZW50aWNhdGVkX2J5IjpbImF1dG9sb2d...
 
 { "success": "Your account has been created" }
 ```
@@ -111,15 +111,15 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjozLCJhdXRoZW50aWNhdGVkX2J5
 
 Without Authorization token:
 
-```
+```yaml
 # GET: http://127.0.0.1:3000/organizations/1/projects
 # Content-Type: application/json
 
 # Response:
 # Use the token obtained in Authorization header
-HTTP/1.1 200 OK
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjozLCJhdXRoZW50aWNhdGVkX2J5IjpbImF1dG9sb2d...
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+# Authorization: eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjozLCJhdXRoZW50aWNhdGVkX2J5IjpbImF1dG9sb2d...
 
 { "success": "our account has been created" }
 ```

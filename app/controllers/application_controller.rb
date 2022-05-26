@@ -17,8 +17,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_jwt_token
-    if rodauth.use_jwt? && rodauth.valid_jwt?
-      response.headers['Authorization'] = rodauth.session_jwt
-    end
+    response.headers['Authorization'] = rodauth.session_jwt if rodauth.use_jwt? && rodauth.valid_jwt?
   end
 end

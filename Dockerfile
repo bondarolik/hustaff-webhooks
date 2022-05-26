@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Update Gems and install Bundler
 RUN gem update --system
 RUN gem install bundler
+RUN gem install rubocop
 
 # Setup workdir and copy code from local machine to container working directory
 WORKDIR /app

@@ -24,9 +24,13 @@ Style/Documentation:
 
 Metrics/AbcSize:
   Enabled: yes
-
+  Exclude:
+    - 'db/**/*.rb'
+    
 Metrics/MethodLength:
   Enabled: yes
+  Exclude:
+    - 'db/**/*.rb'
 
 Metrics/CyclomaticComplexity:
   Enabled: yes
@@ -49,6 +53,8 @@ RSpec/MultipleExpectations:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
+    - 'db/**/*.rb'
+    - 'config/environments/*.rb'
 
 RSpec/NestedGroups:
   Max: 5

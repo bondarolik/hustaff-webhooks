@@ -21,8 +21,8 @@ gem 'turbolinks', '~> 5'
 
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
-gem "rodauth-rails", "~> 1.0"
-gem "jwt"
+gem 'jwt'
+gem 'rodauth-rails', '~> 1.0'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'

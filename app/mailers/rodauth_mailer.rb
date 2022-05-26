@@ -1,19 +1,22 @@
+# frozen_string_literal: true
+
+# Rodauth Gem Mailer
 class RodauthMailer < ApplicationMailer
-  def verify_account(name = nil, account_id, key)
+  def verify_account(account_id, key, name = nil)
     @email_link = email_link(name, :verify_account, account_id, key)
     @account = find_account(name, account_id)
 
     mail to: @account.email, subject: rodauth(name).verify_account_email_subject
   end
 
-  def reset_password(name = nil, account_id, key)
+  def reset_password(account_id, key, name = nil)
     @email_link = email_link(name, :reset_password, account_id, key)
     @account = find_account(name, account_id)
 
     mail to: @account.email, subject: rodauth(name).reset_password_email_subject
   end
 
-  def verify_login_change(name = nil, account_id, key)
+  def verify_login_change(account_id, key, name = nil)
     @email_link = email_link(name, :verify_login_change, account_id, key)
     @account = find_account(name, account_id)
     @new_email = @account.login_change_key.login
@@ -21,7 +24,7 @@ class RodauthMailer < ApplicationMailer
     mail to: @new_email, subject: rodauth(name).verify_login_change_email_subject
   end
 
-  def password_changed(name = nil, account_id)
+  def password_changed(account_id, name = nil)
     @account = find_account(name, account_id)
 
     mail to: @account.email, subject: rodauth(name).password_changed_email_subject

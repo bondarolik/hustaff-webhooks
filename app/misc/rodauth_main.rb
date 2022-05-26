@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Service to handle authentication
 class RodauthMain < Rodauth::Rails::Auth
   configure do
     # List of authentication features that are loaded.
@@ -6,7 +9,8 @@ class RodauthMain < Rodauth::Rails::Auth
     #   :reset_password, :change_password, :change_password_notify,
     #   :change_login, :verify_login_change, :close_account
 
-    enable :create_account, :login, :logout, :jwt,  :reset_password, :change_password, :change_password_notify, :change_login, :close_account
+    enable :create_account, :login, :logout, :jwt, :reset_password, :change_password, :change_password_notify,
+           :change_login, :close_account
 
     # See the Rodauth documentation for the list of available config options:
     # http://rodauth.jeremyevans.net/documentation.html
@@ -14,7 +18,7 @@ class RodauthMain < Rodauth::Rails::Auth
     # ==> General
     # The secret key used for hashing public-facing tokens for various features.
     # Defaults to Rails `secret_key_base`, but you can use your own secret key.
-    # hmac_secret "1497775fc0251629f2071815972ee4cd73537db556a70ccd696a0f571b7d66a96361c4ccb64f8119e447cd769e6b0c58084ed97987c037aa40fc2b12987c5aa2"
+    # hmac_secret "your_super_secret"
 
     # Set JWT secret, which is used to cryptographically protect the token.
     jwt_secret ENV['JWT_SECRET']
@@ -78,16 +82,18 @@ class RodauthMain < Rodauth::Rails::Auth
 
     # ==> Flash
     # Override default flash messages.
-    # create_account_notice_flash "Your account has been created. Please verify your account by visiting the confirmation link sent to your email address."
-    # require_login_error_flash "Login is required for accessing this page"
+    # create_account_notice_flash I18n.t("rodauth.create_account_notice")
+    # require_login_error_flash I18n.t("rodauth.create_account_error")
     # login_notice_flash nil
 
     # ==> Validation
     # Override default validation error messages.
     # no_matching_login_message "user with this email address doesn't exist"
-    # already_an_account_with_this_login_message "user with this email address already exists"
-    # password_too_short_message { "needs to have at least #{password_minimum_length} characters" }
-    # login_does_not_meet_requirements_message { "invalid email#{", #{login_requirement_message}" if login_requirement_message}" }
+    # already_an_account_with_this_login_message I18n.t("rodauth.already_an_account_with_this_login_message")
+    # password_too_short_message { I18n.t("rodauth.create_account_notice", min: password_minimum_length) }
+    login_does_not_meet_requirements_message do
+      "invalid email#{", #{login_requirement_message}" if login_requirement_message}"
+    end
 
     # Change minimum number of password characters required when creating an account.
     # password_minimum_length 8
