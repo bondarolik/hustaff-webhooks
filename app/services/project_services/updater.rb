@@ -4,7 +4,7 @@
 # Funcion: update project with given params
 # Obligatory params: project_params
 module ProjectServices
-  class Creator < ApplicationService
+  class Updater < ApplicationService
     attr_reader :project, :permitted_params
 
     def initialize(project, params)
