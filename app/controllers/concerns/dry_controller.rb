@@ -1,26 +1,39 @@
 # frozen_string_literal: true
 
-# Helps us to keep our controllers cleaner
+# Concerns to keep controllers dry & clean
+# Contains:
+# - Main CRUD actions
+# - ModelClassSerializer
+# - @resource_class on each controller method
+# - Organization and Project
 module DryController
   extend ActiveSupport::Concern
 
   included do
     before_action :set_resource_class
-    before_action :find_organization, if: :is_project?
-    before_action :find_project, only: %i[show update destroy], if: :is_project?
-    before_action :find_project, only: :create, if: :is_task?
+    before_action :serializer_class
     before_action :set_resource, only: %i[show update destroy]
+    before_action :find_organization, if: :project?
+    before_action :find_project, only: %i[show update destroy], if: :project?
+    before_action :find_project, only: %i[index create], if: :task?
+  end
+
+  def index
+    @resources = task? ? @project.tasks : @organization.projects
+    render json: @serializer.new(@resources).serializable_hash
   end
 
   def show
-    render json: serializer_class.new(@resource).serializable_hash
+    render json: @serializer.new(@resource).serializable_hash
   end
+
+  def update; end
 
   def destroy
     @resource.destroy
     head :ok
   end
-  
+
   private
 
   def resource_class
@@ -31,16 +44,16 @@ module DryController
     @resource_class = resource_class
   end
 
-  def is_project?
-    @resource_class.name.downcase == 'Project'.downcase
+  def project?
+    @resource_class.name.casecmp('Project').zero?
   end
 
-  def is_task?
-    @resource_class.name.downcase == 'Task'.downcase
-  end  
+  def task?
+    @resource_class.name.casecmp('Task').zero?
+  end
 
   def serializer_class
-    eval([resource_class, "Serializer"].join('').to_s)
+    @serializer = Kernel.const_get([resource_class, 'Serializer'].join.to_s)
   end
 
   def set_resource
@@ -48,14 +61,14 @@ module DryController
   end
 
   def find_organization
-    @organization = Organization.find(params[:organization_id])  
+    @organization = Organization.find(params[:organization_id])
   end
-  
+
   def find_project
-    @project = if is_project?
-                @organization.projects.find(params[:id])
-              else
-                @project = @resource_class.find(params[:id])
-              end
-  end    
+    @project = if project?
+                 @organization.projects.find(params[:id])
+               else
+                 Project.find(params[:project_id])
+               end
+  end
 end

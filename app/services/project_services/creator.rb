@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-# Module: Projects
-# Funcion: create new project
-# Obligatory params: organization and project_params
+# Module: Project Service Layer
 module ProjectServices
+  # Funcion: create new project
+  # Obligatory params: organization and project_params
+  # Returns: object with success? true/false, payload, error and status if present
   class Creator < ApplicationService
     attr_reader :organization, :permitted_params
 
     def initialize(organization, params)
       @organization = organization
       @permitted_params = params
+      super
     end
 
     def call
