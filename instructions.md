@@ -151,3 +151,5 @@ Now, let's use Authorization token:
   ]
 }
 ```
+
+Passing an Authorization token obtained from Login you are able to access to all available actions on Organization, Projects and Tasks controllers.
