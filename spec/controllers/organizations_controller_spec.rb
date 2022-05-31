@@ -3,6 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
+  # Login to http basic auth
+  include AuthHelper
+
+  before(:each) do
+    http_login
+    request.headers.merge!(ACCEPT: "application/json", AUTHORIZATION: request.env['HTTP_AUTHORIZATION'])
+  end
+
   describe 'GET #show' do
     context 'when organization exists' do
       let!(:organization) { create(:organization) }

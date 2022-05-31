@@ -6,6 +6,7 @@ class TasksController < ApplicationController
   include DryController
 
   def create
+    super
     result = TaskServices::Creator.call(@project, permitted_params)
 
     if result.success?
@@ -17,10 +18,12 @@ class TasksController < ApplicationController
 
   def update
     super
-    if @resource.update(task_params)
-      render json: @serializer.new(@resource).serializable_hash
+    result = TaskServices::Updater.call(@resource, permitted_params)
+
+    if result.success?
+      render json: @serializer.new(result.payload).serializable_hash
     else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: result.payload.errors.full_messages }, status: result.status
     end
   end
 

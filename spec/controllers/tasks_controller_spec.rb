@@ -3,6 +3,14 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
+  # Login to http basic auth
+  include AuthHelper
+
+  before(:each) do
+    http_login
+    request.headers.merge!(ACCEPT: "application/json", AUTHORIZATION: request.env['HTTP_AUTHORIZATION'])
+  end
+
   describe 'GET #index' do
     let!(:project1) { create(:project) }
     let!(:project2) { create(:project) }
@@ -254,9 +262,9 @@ RSpec.describe TasksController, type: :controller do
       let!(:task1) { create(:task, project: project1) }
       let!(:task2) { create(:task, project: project2) }
 
-      it 'returns 404' do
+      it 'returns 404' do        
         delete :destroy, params: { project_id: project1.id, id: task2.id }
-
+                
         expect(response).to be_not_found
         expect(json_response).to eq(error: 'Not Found')
       end

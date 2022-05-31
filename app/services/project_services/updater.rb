@@ -11,15 +11,16 @@ module ProjectServices
     def initialize(project, params)
       @project = project
       @permitted_params = params
-      super
     end
 
     def call
-      @project.update(@permitted_params)
+      if @project.update(permitted_params)
+        OpenStruct.new({ success?: true, payload: @project })
+      else
+        OpenStruct.new({ success?: false, payload: @project, status: :unprocessable_entity })
+      end
     rescue StandardError => e
-      OpenStruct.new({ success?: false, payload: @project, error: e, status: :unprocessable_entity })
-    else
-      OpenStruct.new({ success?: true, payload: @project })
+      OpenStruct.new({ success?: false, payload: @project, error: e, status: :bad_request })
     end
   end
 end

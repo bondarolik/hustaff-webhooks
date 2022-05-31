@@ -11,15 +11,16 @@ module TaskServices
     def initialize(task, params)
       @task = task
       @permitted_params = params
-      super
     end
 
     def call
-      @task.update(@permitted_params)
+      if @task.update(permitted_params)
+        OpenStruct.new({ success?: true, payload: @task })
+      else
+        OpenStruct.new({ success?: false, payload: @task, status: :unprocessable_entity })
+      end
     rescue StandardError => e
-      OpenStruct.new({ success?: false, payload: @task, error: e, status: :unprocessable_entity })
-    else
-      OpenStruct.new({ success?: true, payload: @task })
+      OpenStruct.new({ success?: false, payload: @task, error: e, status: :bad_request })
     end
   end
 end

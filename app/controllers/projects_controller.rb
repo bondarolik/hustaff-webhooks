@@ -6,6 +6,7 @@ class ProjectsController < ApplicationController
   include DryController
 
   def create
+    super
     result = ProjectServices::Creator.call(@organization, permitted_params)
 
     if result.success?
