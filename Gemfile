@@ -18,8 +18,11 @@ gem 'turbolinks', '~> 5'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
+
 # Use Active Model has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.7'
+gem 'jwt'
+gem 'rodauth-rails', '~> 1.0'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -45,6 +48,9 @@ group :development, :test do
   gem 'rubocop-rails', '~> 2.11'
   gem 'rubocop-rake', '~> 0.6'
   gem 'rubocop-rspec', '~> 2.4'
+
+  gem 'dotenv-rails'
+  gem 'letter_opener'
 end
 
 group :development do

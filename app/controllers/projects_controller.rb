@@ -2,51 +2,34 @@
 
 # Exposes API for interacting with Projects.
 class ProjectsController < ApplicationController
-  before_action :find_organization
-  before_action :find_project, only: %i[show update destroy]
-
-  def index
-    render json: ProjectSerializer.new(@organization.projects).serializable_hash
-  end
+  before_action :authenticate
+  include DryController
 
   def create
-    @project = @organization.projects.build(project_params)
+    super
+    result = ProjectServices::Creator.call(@organization, permitted_params)
 
-    if @project.save
-      render json: ProjectSerializer.new(@project).serializable_hash
+    if result.success?
+      render json: @serializer.new(result.payload).serializable_hash
     else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: result.payload.errors.full_messages }, status: result.status
     end
-  end
-
-  def show
-    render json: ProjectSerializer.new(@project).serializable_hash
   end
 
   def update
-    if @project.update(project_params)
-      render json: ProjectSerializer.new(@project).serializable_hash
-    else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
-    end
-  end
+    super
+    result = ProjectServices::Updater.call(@resource, permitted_params)
 
-  def destroy
-    @project.destroy
-    head :ok
+    if result.success?
+      render json: @serializer.new(result.payload).serializable_hash
+    else
+      render json: { errors: result.payload.errors.full_messages }, status: result.status
+    end
   end
 
   private
 
-  def find_organization
-    @organization = Organization.find(params[:organization_id])
-  end
-
-  def find_project
-    @project = @organization.projects.find(params[:id])
-  end
-
-  def project_params
-    params.permit(:name)
+  def permitted_params
+    params.permit(:name, :organization_id)
   end
 end
